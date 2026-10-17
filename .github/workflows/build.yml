@@ -1,1 +1,28 @@
+name: Build Fixed Impactor
 
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout fixed PR
+        uses: actions/checkout@v4
+        with:
+          repository: claration/impactor
+          ref: refs/pull/288/head
+          submodules: recursive
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Build Impactor
+        run: cargo build --release --bin plumeimpactor
+
+      - name: Upload EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: PlumeImpactor-GSA-Fix-Windows
+          path: target/release/plumeimpactor.exe
